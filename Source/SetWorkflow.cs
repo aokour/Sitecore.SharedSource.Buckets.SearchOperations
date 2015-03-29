@@ -20,7 +20,8 @@ using System.Collections.Specialized;
 using System.Linq;
 using Sitecore.Data;
 using Sitecore.Configuration;
-namespace Sitecore.SharedSource.Bucket.SearchOperations
+
+namespace Sitecore.SharedSource.Buckets.SearchOperations
 {
     [Serializable]
     public class SetWorkflow : WebEditCommand
@@ -67,6 +68,7 @@ namespace Sitecore.SharedSource.Bucket.SearchOperations
                             string title = "Applying workflow on items";
                             string icon = "~/icon/network/16x16/outbox.png";
                             ProgressBox.Execute(jobName, title, icon, new ProgressBoxMethod(this.StartProcess), parameters);
+                            SheerResponse.Alert("Workflow '" + workflowItem.Name + "' was applied", new string[0]);
                         }
 
                     }
@@ -120,6 +122,7 @@ namespace Sitecore.SharedSource.Bucket.SearchOperations
                         Account account = Account.FromName(accountName, AccountType.User);
                         int num = source.Count<SitecoreUISearchResultItem>();
                         int num2 = 1;
+                        int numActual = 0;
                         string str3 = Translate.TextByLanguage("Processed", clientLanguage);
                         foreach (SitecoreUISearchResultItem item3 in source)
                         {
@@ -141,6 +144,7 @@ namespace Sitecore.SharedSource.Bucket.SearchOperations
                                     Sitecore.Workflows.IWorkflow workflow = item.Database.WorkflowProvider.GetWorkflow(workflowItem.ID.ToString());
 
                                     workflow.Start(item4);
+                                    numActual++;
                                 }
 
                             }
